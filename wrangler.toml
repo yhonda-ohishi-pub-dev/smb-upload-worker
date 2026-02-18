@@ -1,0 +1,7 @@
+name = "smb-upload-worker"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[[services]]
+binding = "GRPC_PROXY"
+service = "cf-grpc-proxy"
