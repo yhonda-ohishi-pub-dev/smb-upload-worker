@@ -19,6 +19,11 @@ export async function handleUpload(
   }
   const token = authHeader.slice("Bearer ".length);
 
+  const orgId = request.headers.get("x-organization-id");
+  if (!orgId) {
+    return errorResponse(400, "Missing x-organization-id header");
+  }
+
   let formData: FormData;
   try {
     formData = await request.formData();
@@ -26,8 +31,8 @@ export async function handleUpload(
     return errorResponse(400, "Invalid multipart/form-data body");
   }
 
-  const dataField = formData.get("data");
-  if (!dataField || !(dataField instanceof File)) {
+  const dataField = formData.get("data") as unknown as File | null;
+  if (!dataField || typeof dataField === "string") {
     return errorResponse(400, "Missing 'data' file field");
   }
 
@@ -49,6 +54,7 @@ export async function handleUpload(
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          "x-organization-id": orgId,
         },
       },
     );

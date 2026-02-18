@@ -37,9 +37,13 @@ export async function handleAuthLogin(
       password: body.password,
     });
 
+    const payloadB64 = response.token.split(".")[1];
+    const payload = JSON.parse(atob(payloadB64!));
+
     return jsonResponse({
       token: response.token,
       expiresAt: response.expiresAt,
+      organizationId: payload.org,
     });
   } catch (err) {
     if (err instanceof ConnectError) {
