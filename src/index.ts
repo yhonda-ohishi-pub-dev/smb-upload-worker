@@ -1,4 +1,6 @@
 import { handleAuthLogin } from "./handlers/auth";
+import { handleGoogleAuth } from "./handlers/google-auth";
+import { handleListOrganizations } from "./handlers/organizations";
 import { handleUpload } from "./handlers/upload";
 
 export interface Env {
@@ -24,6 +26,10 @@ export default {
       switch (url.pathname) {
         case "/auth/login":
           return await handleAuthLogin(request, env);
+        case "/auth/google":
+          return await handleGoogleAuth(request, env);
+        case "/organizations":
+          return await handleListOrganizations(request, env);
         case "/upload":
           return await handleUpload(request, env);
         default:
