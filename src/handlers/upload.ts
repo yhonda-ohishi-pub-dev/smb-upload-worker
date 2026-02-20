@@ -53,7 +53,7 @@ export async function handleUpload(
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          "x-auth-token": token,
           "x-organization-id": orgId,
         },
       },
