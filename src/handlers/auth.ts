@@ -40,6 +40,7 @@ export async function handleAuthLogin(
     const payloadB64 = response.token.split(".")[1];
     const payload = JSON.parse(atob(payloadB64!));
 
+    console.log(`Login OK: username=${body.username}`);
     return jsonResponse({
       token: response.token,
       expiresAt: response.expiresAt,
@@ -47,6 +48,7 @@ export async function handleAuthLogin(
     });
   } catch (err) {
     if (err instanceof ConnectError) {
+      console.error(`Login failed: username=${body.username} error=${err.message}`);
       return errorResponse(connectErrorToHttpStatus(err), err.message);
     }
     throw err;

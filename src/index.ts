@@ -5,6 +5,7 @@ import { handleUpload } from "./handlers/upload";
 
 export interface Env {
   GRPC_PROXY: Fetcher;
+  GOOGLE_CLIENT_ID: string;
 }
 
 function errorResponse(status: number, message: string): Response {
@@ -17,6 +18,7 @@ function errorResponse(status: number, message: string): Response {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    console.log(`${request.method} ${url.pathname}`);
 
     if (request.method !== "POST") {
       return errorResponse(405, "Method not allowed");

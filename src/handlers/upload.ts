@@ -15,12 +15,14 @@ export async function handleUpload(
 ): Promise<Response> {
   const authHeader = request.headers.get("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.warn("Upload rejected: missing or invalid Authorization header");
     return errorResponse(401, "Missing or invalid Authorization header");
   }
   const token = authHeader.slice("Bearer ".length);
 
   const orgId = request.headers.get("x-organization-id");
   if (!orgId) {
+    console.warn("Upload rejected: missing x-organization-id header");
     return errorResponse(400, "Missing x-organization-id header");
   }
 
@@ -61,15 +63,18 @@ export async function handleUpload(
 
     const file = response.file;
     if (!file) {
+      console.error(`Upload failed: no file in gRPC response (filename=${filename})`);
       return errorResponse(500, "No file in response");
     }
 
+    console.log(`Upload OK: filename=${filename} size=${arrayBuffer.byteLength} uuid=${file.uuid} orgId=${orgId}`);
     return jsonResponse({
       uuid: file.uuid,
       message: `Uploaded ${filename}`,
     });
   } catch (err) {
     if (err instanceof ConnectError) {
+      console.error(`Upload failed: filename=${filename} error=${err.message}`);
       return errorResponse(connectErrorToHttpStatus(err), err.message);
     }
     throw err;
